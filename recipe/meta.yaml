@@ -2,6 +2,14 @@
 {% set version = "0.23.0" %}
 {% set sha256 = "8965ec313e0107148d98e8ac1e77a77dce74de3cd97055a1aa62d513a3793a14" %}
 
+# on our builders there is no X11 installed and therefore import
+# test will fail
+{% if target_platform != "linux-aarch64" and target_platform != "linux-64"%}
+{% set enable_testingui = true %}
+{% else %}
+{% set enable_testingui = false %}
+{% endif %}
+
 package:
   name: {{ name|lower }}
   version: {{ version }}
@@ -25,11 +33,13 @@ requirements:
   run:
     - python
 
+{% if enable_testingui %}
 test:
   requires:
     - pyqt
   imports:
     - qasync
+{% endif %}
 
 about:
   home: https://github.com/CabbageDevelopment/qasync
