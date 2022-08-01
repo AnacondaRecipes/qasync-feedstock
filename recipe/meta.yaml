@@ -1,0 +1,48 @@
+{% set name = "qasync" %}
+{% set version = "0.23.0" %}
+{% set sha256 = "8965ec313e0107148d98e8ac1e77a77dce74de3cd97055a1aa62d513a3793a14" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv
+  skip: True  # [py<36]
+  skip: True  # [linux and (s390x or ppc64le)]
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+
+test:
+  requires:
+    - pyqt
+  imports:
+    - qasync
+
+about:
+  home: https://github.com/CabbageDevelopment/qasync
+  license: BSD-2-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Implementation of the PEP 3156 Event-Loop with Qt.
+
+  description: |
+    qasync allows coroutines to be used in PyQt/PySide applications by
+    providing an implementation of the PEP 3156 event-loop.
+  dev_url: https://github.com/CabbageDevelopment/qasync
+
+extra:
+  recipe-maintainers:
+    - ales-erjavec
