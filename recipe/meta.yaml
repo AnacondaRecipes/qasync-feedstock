@@ -33,13 +33,12 @@ test:
     - pytest -v tests  # [not linux]
     # Aborted" when trying to initialize QApplication in a session-scoped fixture on Linux,
     # which indicates Qt is attempting to create GUI resources without a display server (X11/Wayland) being available in the CI environment.
-    # Configure the test environment to run in headless mode using xvfb:
-    - xvfb-run -a pytest -v tests  # [linux]
+    # Use Qt offscreen platform for Linux headless testing
+    - export QT_QPA_PLATFORM=offscreen && export QT_DEBUG_PLUGINS=0 && pytest -v tests  # [linux]
   requires:
     - pip
     - pytest >=8.4
     - pyqt
-    - xvfb-run-linux  # [linux]
 
 about:
   home: https://github.com/CabbageDevelopment/qasync
