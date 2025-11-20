@@ -1,45 +1,40 @@
 {% set name = "qasync" %}
-{% set version = "0.27.1" %}
-
-# on our builders there is no X11 installed and therefore import
-# test will fail
-{% if target_platform != "linux-aarch64" and target_platform != "linux-64"%}
-{% set enable_testingui = true %}
-{% else %}
-{% set enable_testingui = false %}
-{% endif %}
+{% set version = "0.28.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 8dc768fd1ee5de1044c7c305eccf2d39d24d87803ea71189d4024fb475f4985f
+  url: https://github.com/CabbageDevelopment/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 1b80e2315663350b04c2c780d8ea0c76f5e4cf09fb55347e40cb16540e6411d7
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
-  skip: True  # [py<38 or (linux and s390x)]
+  skip: True  # [py<38]
 
 requirements:
   host:
     - python
     - pip
-    - poetry-core >=1.5.0
+    - uv-build >=0.8.3,<0.9.0
   run:
     - python
+    - h11 >=0.16.0,<1.0
 
-{% if enable_testingui %}
 test:
+  source_files:
+    - tests
   imports:
     - qasync
-  requires:
-    - pyqt
-    - pip
   commands:
     - pip check
-{% endif %}
+    - pytest -v tests
+  requires:
+    - pip
+    - pytest >=8.4
+    - pyqt
 
 about:
   home: https://github.com/CabbageDevelopment/qasync
