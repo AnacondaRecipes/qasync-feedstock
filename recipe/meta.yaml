@@ -21,7 +21,6 @@ requirements:
     - uv-build >=0.8.3,<0.9.0
   run:
     - python
-    #- h11 >=0.16.0,<1.0
 
 test:
   source_files:
@@ -33,7 +32,6 @@ test:
     - pytest -v tests  # [not linux]
     # Aborted when trying to initialize QApplication in a session-scoped fixture on Linux,
     # which indicates Qt is attempting to create GUI resources without a display server (X11/Wayland) being available in the CI environment.
-    #- export QT_QPA_PLATFORM=offscreen && export QT_DEBUG_PLUGINS=0 && pytest -v tests  # [linux]
     - DISPLAY=localhost:1.0 xvfb-run -a bash -c pytest -v tests  # [linux]
   requires:
     - pip
