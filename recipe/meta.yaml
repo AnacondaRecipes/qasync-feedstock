@@ -29,10 +29,8 @@ test:
     - qasync
   commands:
     - pip check
-    # The two test_qthreadexec.py GC-timing tests fail under pytest 9 on every
-    # Python (upstream issue CabbageDevelopment/qasync#178, unfixed in 0.28.0);
-    # pytest 9 is the only pytest series on win-arm64, so deselect everywhere.
-    # Re-enable once upstream fixes #178.
+    # The two test_qthreadexec.py tests that check objects are freed after use rely on
+    # garbage collection timing and fail on win-arm64 (upstream issue #178); re-enable once fixed.
     - pytest -v tests --deselect=tests/test_qthreadexec.py::test_no_stale_reference_as_argument --deselect=tests/test_qthreadexec.py::test_no_stale_reference_as_result  # [not linux]
     # Aborted when trying to initialize QApplication in a session-scoped fixture on Linux,
     # which indicates Qt is attempting to create GUI resources without a display server (X11/Wayland) being available in the CI environment.
